@@ -82,6 +82,7 @@ def setting(action, config):
     return [
 	filter_elements.key(),
        	filter_elements.value(),
+        filter_elements.exclude(exclude=False),
     ]
 
 def forcemerged(action, config):
