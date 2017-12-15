@@ -72,6 +72,7 @@ def index_filtertypes():
         'closed',
         'count',
         'forcemerged',
+        'setting',
         'kibana',
         'none',
         'opened',

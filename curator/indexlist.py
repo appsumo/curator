@@ -82,6 +82,7 @@ class IndexList(object):
         if not index in self.index_info:
             self.index_info[index] = {
                 "age" : {},
+                "settings" : {},
                 "number_of_replicas" : 0,
                 "number_of_shards" : 0,
                 "segments" : 0,
@@ -104,6 +105,7 @@ class IndexList(object):
             'period': self.filter_period,
             'pattern': self.filter_by_regex,
             'space': self.filter_by_space,
+            'setting': self.filter_by_setting,
         }
         return methods[ft]
 
@@ -174,6 +176,9 @@ class IndexList(object):
                     )
                     s['number_of_shards'] = (
                         wl['settings']['index']['number_of_shards']
+                    )
+                    s['index_settings'] = (
+                        wl['settings']['index']
                     )
                     s['state'] = wl['state']
                     if 'routing' in wl['settings']['index']:
@@ -683,6 +688,20 @@ class IndexList(object):
                 )
             )
             self.__excludify(condition, exclude, index)
+
+    def filter_by_setting(self,
+            key=None, value=None, exclude=False
+        ):
+        self.loggit.debug(
+            'Filtering indices with setting')
+        if not key:
+            raise MissingArgument('No value for "key" provided')
+        if not value:
+            raise MissingArgument('No value for "value" provided') 
+        self.filter_closed()
+        for index in self.working_list():
+          setting_value = self.index_info[index]['index_settings'][key]
+          self.__excludify(setting_value == value, exclude, index)
 
     def filter_allocated(self,
             key=None, value=None, allocation_type='require', exclude=True,

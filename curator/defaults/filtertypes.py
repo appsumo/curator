@@ -78,6 +78,12 @@ def count(action, config):
     retval += _age_elements(action, config)
     return retval
 
+def setting(action, config):
+    return [
+	filter_elements.key(),
+       	filter_elements.value(),
+    ]
+
 def forcemerged(action, config):
     return [
         filter_elements.max_num_segments(),
